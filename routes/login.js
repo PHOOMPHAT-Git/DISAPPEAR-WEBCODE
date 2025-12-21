@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const https = require('https');
-const User = require('./models/user.js');
+const User = require('../models/user.js');
 
 const robloxUsernameToId = (username) => {
     const body = JSON.stringify({ usernames: [String(username)], excludeBannedUsers: false });

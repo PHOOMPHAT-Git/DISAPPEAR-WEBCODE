@@ -1,0 +1,10 @@
+npm init -y
+npm i express ejs mongoose cookie-parser dotenv http-errors
+npm i morgan
+npm i -D nodemon
+
+git add .
+git commit -am "update"
+git rebase --abort
+git pull origin main --rebase
+git push -u origin main

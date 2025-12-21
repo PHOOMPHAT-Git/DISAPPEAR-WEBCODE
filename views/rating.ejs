@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="preload" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Disappear | Rating</title>
+    <link rel="icon" type="image/png" href="/img/NEXORIA_GOLD_LOGO.png?v=2"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/stylesheet/rating.css">
+    <link rel="stylesheet" href="stylesheet/addon/scrollbar.css">
+    <script src="/javascript/addon/loader.js"></script>
+    <script src="/javascript/addon/changepage.js"></script>
+    <style id="preload-cover-style">
+        html.preload::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background:#303030;
+            z-index:999998;
+            opacity:1;
+            pointer-events:none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__logo">
+                <span class="nav__logo-text">DISAPPEAR</span>
+            </div>
+            <%- include('partials/menu') %>
+            <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="nav__cta neu-btn neu-btn--raised">
+                <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+                <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+            </a>
+            <button class="nav__hamburger" id="hamburger">
+                <i class="fas fa-bars hamburger-open"></i>
+                <i class="fas fa-xmark hamburger-close"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <%- include('partials/menumb') %>
+        <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="neu-btn neu-btn--raised mobile-menu__cta">
+            <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+            <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+        </a>
+    </div>
+
+    <section class="ratings" id="ratings" style="padding-top:140px;">
+        <div class="ratings__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Rating</span>
+                </div>
+                <h2 class="section-title">Check Rating</h2>
+                <p class="section-subtitle">Search by Roblox username</p>
+            </div>
+
+            <div class="ratings__layout">
+                <div class="neu-card neu-card--raised ratings__panel">
+                    <div class="ratings__panel-head">
+                        <h3 class="ratings__panel-title">Search</h3>
+                    </div>
+
+                    <form class="ratings__form" action="/rating" method="GET" autocomplete="off">
+                        <div class="ratings__row">
+                            <input class="ratings__input" name="username" type="text" placeholder="Roblox username" maxlength="40" value="<%= queryUsername || '' %>" required>
+                            <button class="neu-btn neu-btn--raised" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <% if (error) { %>
+                        <div class="ratings__result" style="margin-top:14px;">
+                            <div class="ratings__empty">
+                                <%= error === 'roblox_user_not_found' ? 'Roblox user not found.' : 'Rating not found.' %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+
+                <div class="neu-card neu-card--raised ratings__panel">
+                    <div class="ratings__panel-head">
+                        <h3 class="ratings__panel-title">Result</h3>
+                    </div>
+
+                    <% if (rating) { %>
+                        <div class="neu-card neu-card--inset ratings__item" style="margin-top:14px;">
+                            <div class="ratings__item-top">
+                                <div class="ratings__user">
+                                    <i class="fa-solid fa-user ratings__user-icon"></i>
+                                    <span class="ratings__username"><%= rating.roblox_username || (rating.roblox_user_id ? ('User ' + rating.roblox_user_id) : 'Unknown') %><%= rating.user_number ? (' - ' + rating.user_number) : '' %></span>
+                                </div>
+                                <div class="ratings__score"><%= (typeof rating.rating === 'number') ? rating.rating.toFixed(1).replace(/\.0$/, '') : (rating.rating || 0) %>/10</div>
+                            </div>
+                            <div class="ratings__message"><%= rating.message || '' %></div>
+                            <div class="ratings__time"><%= rating.updated_at ? new Date(rating.updated_at).toLocaleString() : '' %></div>
+                        </div>
+                    <% } else { %>
+                        <div class="ratings__empty" style="margin-top:14px;">No result.</div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/addon/interface.js"></script>
+</body>
+</html>

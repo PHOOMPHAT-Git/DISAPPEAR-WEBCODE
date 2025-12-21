@@ -1,0 +1,4 @@
+npm i express ejs mongoose dotenv cookie-parser http-errors
+npm i morgan
+npm init -y
+npm install

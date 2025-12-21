@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html class="preload" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Disappear | Main</title>
+    <link rel="icon" type="image/png" href="/img/NEXORIA_GOLD_LOGO.png?v=2"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet/home.css">
+    <link rel="stylesheet" href="stylesheet/addon/scrollbar.css">
+    <script src="/javascript/addon/loader.js"></script>
+    <script src="/javascript/addon/changepage.js"></script>
+    <style id="preload-cover-style">
+        html.preload::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background:#303030;
+            z-index:999998;
+            opacity:1;
+            pointer-events:none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__logo">
+                <span class="nav__logo-text">DISAPPEAR</span>
+            </div>
+            <%- include('partials/menu') %>
+            <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="nav__cta neu-btn neu-btn--raised">
+                <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+                <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+            </a>
+            <button class="nav__hamburger" id="hamburger">
+                <i class="fas fa-bars hamburger-open"></i>
+                <i class="fas fa-xmark hamburger-close"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <%- include('partials/menumb') %>
+        <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="neu-btn neu-btn--raised mobile-menu__cta">
+            <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+            <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+        </a>
+    </div>
+
+    <section class="hero" id="home">
+        <div class="hero__bg-glow hero__bg-glow--left"></div>
+        <div class="hero__bg-glow hero__bg-glow--right"></div>
+        <div class="hero__container">
+            <div class="hero__content">
+                <div class="hero__badge neu-badge">
+                    <i class="fas fa-compass"></i>
+                    <span>MMORPG</span>
+                </div>
+                <h1 class="hero__title">
+                    <span class="hero__title-main">DISAPPEAR</span>
+                </h1>
+                <p class="hero__tagline">Where Reality Fades Into Mystery</p>
+                <p class="hero__description">
+                    Step into a world where nothing is as it seems. Uncover hidden secrets,
+                    solve ancient puzzles, and find your way back before you become part of the void.
+                </p>
+
+                <div class="hero__stats">
+                    <div class="hero__stat neu-card neu-card--raised">
+                        <div class="hero__stat-icon neu-icon neu-icon--inset">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="hero__stat-content">
+                            <span class="hero__stat-value"><%= Array.isArray(data) ? data.length : 0 %></span>
+                            <span class="hero__stat-label">Members</span>
+                        </div>
+                    </div>
+                    <div class="hero__stat-divider"></div>
+                    <div class="hero__stat neu-card neu-card--raised">
+                        <div class="hero__stat-icon neu-icon neu-icon--inset">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="hero__stat-content">
+                            <span class="hero__stat-value" id="ratingsAvg"><%= (typeof avgRating10 !== 'undefined' && avgRating10 !== null) ? avgRating10 : 0 %></span>
+                            <span class="hero__stat-label">Avg / 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero__actions">
+                    <a
+                        href="<%= (config && config.game) ? config.game : '#' %>"
+                        class="neu-btn neu-btn--raised neu-btn--gold neu-btn--large"
+                        <%= (config && config.game) ? 'target="_blank" rel="noopener"' : 'aria-disabled="true" onclick="return false;"' %>
+                    >
+                        <i class="fas fa-gamepad"></i>
+                        <span>Play Now</span>
+                    </a>
+
+                    <a
+                        href="<%= (config && config.youtube) ? config.youtube : '#' %>"
+                        class="neu-btn neu-btn--inset neu-btn--large"
+                        <%= (config && config.youtube) ? 'target="_blank" rel="noopener"' : 'aria-disabled="true" onclick="return false;"' %>
+                    >
+                        <i class="fas fa-circle-play"></i>
+                        <span>Watch Trailer</span>
+                    </a>
+                </div>
+
+                <div class="hero__scroll-hint">
+                    <span>Scroll to explore</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="about__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fas fa-book-open"></i>
+                    <span>The Story</span>
+                </div>
+                <h2 class="section-title">What Lies Beyond</h2>
+                <p class="section-subtitle">A world where nothing is as it seems</p>
+            </div>
+            <div class="about__content">
+                <div class="about__card neu-card neu-card--raised">
+                    <div class="about__card-icon neu-icon neu-icon--inset">
+                        <i class="fas fa-mask"></i>
+                    </div>
+                    <h3 class="about__card-title">The Mystery</h3>
+                    <p class="about__card-text">
+                        People vanish without a trace. Whispers speak of a realm between dimensions
+                        where the lost wander eternally. You are chosen to uncover the truth.
+                    </p>
+                </div>
+                <div class="about__card neu-card neu-card--raised">
+                    <div class="about__card-icon neu-icon neu-icon--inset">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3 class="about__card-title">The Journey</h3>
+                    <p class="about__card-text">
+                        Navigate through twisted corridors of reality. Solve ancient puzzles that
+                        defy logic. Every choice shapes your fate in this ever-shifting labyrinth.
+                    </p>
+                </div>
+                <div class="about__card neu-card neu-card--raised">
+                    <div class="about__card-icon neu-icon neu-icon--inset">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3 class="about__card-title">The Escape</h3>
+                    <p class="about__card-text">
+                        Find the fragments of truth scattered across dimensions. But beware,
+                        the deeper you go, the harder it becomes to remember who you once were.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="features__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Game Features</span>
+                </div>
+                <h2 class="section-title">Unique Experiences</h2>
+                <p class="section-subtitle">Discover what makes Disappear unforgettable</p>
+            </div>
+            <div class="features__grid">
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <span class="feature-card__number">01</span>
+                    </div>
+                    <h3 class="feature-card__title">Mind-Bending Puzzles</h3>
+                    <p class="feature-card__text">
+                        Challenge your perception with puzzles that play with space, time, and reality itself.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Logic</span>
+                        <span class="tag neu-tag">Spatial</span>
+                    </div>
+                </div>
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <span class="feature-card__number">02</span>
+                    </div>
+                    <h3 class="feature-card__title">Multiple Dimensions</h3>
+                    <p class="feature-card__text">
+                        Travel between parallel worlds, each with unique rules and terrifying inhabitants.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Exploration</span>
+                        <span class="tag neu-tag">Mystery</span>
+                    </div>
+                </div>
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <span class="feature-card__number">03</span>
+                    </div>
+                    <h3 class="feature-card__title">Branching Narratives</h3>
+                    <p class="feature-card__text">
+                        Your decisions matter. Multiple endings await based on the choices you make.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Story</span>
+                        <span class="tag neu-tag">Choice</span>
+                    </div>
+                </div>
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-volume-high"></i>
+                        </div>
+                        <span class="feature-card__number">04</span>
+                    </div>
+                    <h3 class="feature-card__title">Atmospheric Audio</h3>
+                    <p class="feature-card__text">
+                        Immersive soundscapes that react to your actions and heighten every moment of tension.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Audio</span>
+                        <span class="tag neu-tag">Immersion</span>
+                    </div>
+                </div>
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-users-rectangle"></i>
+                        </div>
+                        <span class="feature-card__number">05</span>
+                    </div>
+                    <h3 class="feature-card__title">Co-op Mode</h3>
+                    <p class="feature-card__text">
+                        Face the unknown together. Solve puzzles and survive with friends in multiplayer mode.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Multiplayer</span>
+                        <span class="tag neu-tag">Teamwork</span>
+                    </div>
+                </div>
+                <div class="feature-card neu-card neu-card--raised">
+                    <div class="feature-card__header">
+                        <div class="feature-card__icon neu-icon neu-icon--raised">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <span class="feature-card__number">06</span>
+                    </div>
+                    <h3 class="feature-card__title">Endless Replayability</h3>
+                    <p class="feature-card__text">
+                        Procedurally generated elements ensure no two playthroughs are exactly alike.
+                    </p>
+                    <div class="feature-card__tags">
+                        <span class="tag neu-tag">Procedural</span>
+                        <span class="tag neu-tag">Replay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <div class="gallery__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fas fa-images"></i>
+                    <span>Screenshots</span>
+                </div>
+                <h2 class="section-title">Visual Journey</h2>
+                <p class="section-subtitle">Glimpses into the world of Disappear</p>
+            </div>
+            <div class="gallery__grid">
+                <div class="gallery__item gallery__item--large neu-card neu-card--inset">
+                    <div class="gallery__placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Screenshot 1</span>
+                    </div>
+                </div>
+                <div class="gallery__item neu-card neu-card--inset">
+                    <div class="gallery__placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Screenshot 2</span>
+                    </div>
+                </div>
+                <div class="gallery__item neu-card neu-card--inset">
+                    <div class="gallery__placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Screenshot 3</span>
+                    </div>
+                </div>
+                <div class="gallery__item neu-card neu-card--inset">
+                    <div class="gallery__placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Screenshot 4</span>
+                    </div>
+                </div>
+                <div class="gallery__item neu-card neu-card--inset">
+                    <div class="gallery__placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Screenshot 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ratings" id="ratings">
+        <div class="ratings__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Ratings</span>
+                </div>
+                <h2 class="section-title">Player Feedback</h2>
+                <p class="section-subtitle">Latest 9 ratings (older ones will be hidden)</p>
+            </div>
+
+            <div class="ratings__layout">
+                <div class="neu-card neu-card--raised ratings__panel">
+                    <div class="ratings__panel-head">
+                        <h3 class="ratings__panel-title">Latest</h3>
+                    </div>
+
+                    <div class="ratings__list" id="ratingsList">
+                        <% const __ratings = (typeof latestRatings !== 'undefined' && Array.isArray(latestRatings)) ? latestRatings : []; %>
+                        <% if (__ratings.length) { %>
+                            <% __ratings.forEach((r) => { %>
+                                <div class="neu-card neu-card--inset ratings__item" data-userid="<%= r.roblox_user_id || '' %>">
+                                    <div class="ratings__item-top">
+                                        <div class="ratings__user">
+                                            <i class="fa-solid fa-user ratings__user-icon"></i>
+                                            <span class="ratings__username"><%= r.roblox_username || (r.roblox_user_id ? ('User ' + r.roblox_user_id) : 'Unknown') %><%= r.user_number ? (' - ' + r.user_number) : '' %></span>
+                                        </div>
+                                        <div class="ratings__score"><%= (typeof r.rating === 'number') ? r.rating.toFixed(1).replace(/\.0$/, '') : (r.rating || 0) %>/10</div>
+                                    </div>
+                                    <div class="ratings__message"><%= r.message || '' %></div>
+                                    <div class="ratings__time"><%= r.updated_at ? new Date(r.updated_at).toLocaleString() : '' %></div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="ratings__empty">No ratings yet.</div>
+                        <% } %>
+                    </div>
+
+                    <div class="ratings__note">Showing only the latest 9.</div>
+                </div>
+
+                <div class="neu-card neu-card--raised ratings__panel">
+                    <div class="ratings__panel-head">
+                        <h3 class="ratings__panel-title">Find a Rating</h3>
+                    </div>
+
+                    <form class="ratings__form" action="/rating" method="GET" autocomplete="off">
+                        <div class="ratings__row">
+                            <input class="ratings__input" name="username" type="text" placeholder="Roblox username" maxlength="40" required>
+                            <button class="neu-btn neu-btn--raised" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="ratings__result" id="ratingSearchResult"></div>
+
+                    <div class="ratings__divider"></div>
+
+                    <div class="ratings__panel-head">
+                        <h3 class="ratings__panel-title">Leave a Rating</h3>
+                    </div>
+
+                    <% if (typeof auth !== 'undefined' && auth && auth.username) { %>
+                        <form class="ratings__form" id="ratingCreateForm">
+                            <div class="ratings__row ratings__row--stack">
+                                <label class="ratings__label" for="ratingValue">Rating</label>
+                                <input class="ratings__input" id="ratingValue" type="text" inputmode="decimal" maxlength="4" placeholder="0 - 10 (e.g. 4.5)" pattern="^(10(\.0)?|[0-9](\.[0-9])?)$" required>
+                            </div>
+
+                            <div class="ratings__row ratings__row--stack">
+                                <label class="ratings__label" for="ratingMessage">Comment</label>
+                                <textarea class="ratings__textarea" id="ratingMessage" rows="4" maxlength="240" placeholder="Write something..." required></textarea>
+                                <div class="ratings__helper">
+                                    Token required and will be verified automatically from your login session.
+                                    <span class="ratings__count" id="ratingCountText">0/240</span>
+                                </div>
+                            </div>
+
+                            <button class="neu-btn neu-btn--raised neu-btn--gold" type="submit">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Post Rating</span>
+                            </button>
+
+                            <div class="ratings__status" id="ratingCreateStatus"></div>
+                        </form>
+                    <% } else { %>
+                        <div class="ratings__login-hint">
+                            Please <a href="/login" class="ratings__login-link">login</a> to create a rating.
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta__container">
+            <div class="cta__content neu-card neu-card--raised cta__card">
+                <div class="cta__glow"></div>
+                <div class="cta__inner">
+                    <div class="cta__badge neu-badge">
+                        <i class="fas fa-rocket"></i>
+                        <span>Available Now</span>
+                    </div>
+                    <h2 class="cta__title">Ready to Disappear?</h2>
+                    <p class="cta__text">
+                        Join thousands of players who have already stepped into the void.
+                        Your journey awaits.
+                    </p>
+                    <div class="cta__actions">
+                        <a
+                            href="<%= (config && config.game) ? config.game : '#' %>"
+                            class="neu-btn neu-btn--raised neu-btn--gold neu-btn--large"
+                            <%= (config && config.game) ? 'target="_blank" rel="noopener"' : 'aria-disabled="true" onclick="return false;"' %>
+                        >
+                            <i class="fab fa-roblox"></i>
+                            <span>Play on Roblox</span>
+                        </a>
+
+                        <a
+                            href="<%= (config && config.discord) ? config.discord : '#' %>"
+                            class="neu-btn neu-btn--inset neu-btn--large"
+                            <%= (config && config.discord) ? 'target="_blank" rel="noopener"' : 'aria-disabled="true" onclick="return false;"' %>
+                        >
+                            <i class="fab fa-discord"></i>
+                            <span>Join Discord</span>
+                        </a>
+                    </div>
+                    <div class="cta__platforms">
+                        <span class="cta__platforms-label">Available on :</span>
+                        <div class="cta__platform-icons">
+                            <div class="cta__platform neu-icon neu-icon--inset">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <div class="cta__platform neu-icon neu-icon--inset">
+                                <i class="fas fa-mobile-screen"></i>
+                            </div>
+                            <div class="cta__platform neu-icon neu-icon--inset">
+                                <i class="fas fa-tablet-screen-button"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/addon/interface.js"></script>
+    <script src="/javascript/addon/rating.js"></script>
+</body>
+</html>

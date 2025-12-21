@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="preload" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Disappear | Error</title>
+    <link rel="icon" type="image/png" href="/img/NEXORIA_GOLD_LOGO.png?v=2"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet/login.css">
+    <link rel="stylesheet" href="stylesheet/addon/scrollbar.css">
+    <script src="/javascript/addon/loader.js"></script>
+    <script src="/javascript/addon/changepage.js"></script>
+    <style id="preload-cover-style">
+        html.preload::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background:#303030;
+            z-index:999998;
+            opacity:1;
+            pointer-events:none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__logo">
+                <span class="nav__logo-text">DISAPPEAR</span>
+            </div>
+            <%- include('partials/menu') %>
+            <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="nav__cta neu-btn neu-btn--raised">
+                <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+                <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+            </a>
+            <button class="nav__hamburger" id="hamburger">
+                <i class="fas fa-bars hamburger-open"></i>
+                <i class="fas fa-xmark hamburger-close"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <%- include('partials/menumb') %>
+        <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="neu-btn neu-btn--raised mobile-menu__cta">
+            <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
+            <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
+        </a>
+    </div>
+
+    <main class="login">
+        <div class="login__container">
+            <div class="neu-card neu-card--raised login__card">
+                <div class="login__header">
+                    <div class="neu-badge">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Error</span>
+                    </div>
+                    <h1 class="login__title"><%= message || 'Something went wrong' %></h1>
+                    <p class="login__subtitle">Status : <%= (error && error.status) ? error.status : 500 %></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/addon/interface.js"></script>
+</body>
+</html>

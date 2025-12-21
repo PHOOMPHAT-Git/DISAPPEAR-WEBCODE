@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="stylesheet/login.css">
     <link rel="stylesheet" href="stylesheet/addon/scrollbar.css">
+    <link rel="stylesheet" href="stylesheet/addon/dropdown.css">
     <script src="/javascript/addon/loader.js"></script>
     <script src="/javascript/addon/changepage.js"></script>
+    <script src="/javascript/addon/security.js"></script>
     <style id="preload-cover-style">
         html.preload::before{
             content:"";
@@ -31,11 +33,27 @@
             <div class="nav__logo">
                 <span class="nav__logo-text">DISAPPEAR</span>
             </div>
-            <%- include('partials/menu') %>
-            <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="nav__cta neu-btn neu-btn--raised">
-                <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
-                <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
-            </a>
+            <%- include('partials/pc/menu') %>
+            <% const __isAuthed = (typeof auth !== 'undefined' && auth && auth.username); %>
+
+            <% if (__isAuthed) { %>
+                <div class="nav__auth" data-auth-menu="wrap">
+                    <button type="button" class="nav__cta neu-btn neu-btn--raised nav__auth-btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                        <span><%= (auth && auth.username && auth.username.length > 10) ? (auth.username.slice(0, 10) + '...') : (auth && auth.username ? auth.username : '') %></span>
+                        <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                    </button>
+
+                    <div class="nav__auth-menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                        <%- include('partials/pc/dropdown') %>
+                    </div>
+                </div>
+            <% } else { %>
+                <a href="/login" class="nav__cta neu-btn neu-btn--raised">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </a>
+            <% } %>
             <button class="nav__hamburger" id="hamburger">
                 <i class="fas fa-bars hamburger-open"></i>
                 <i class="fas fa-xmark hamburger-close"></i>
@@ -44,11 +62,27 @@
     </nav>
 
     <div class="mobile-menu" id="mobileMenu">
-        <%- include('partials/menumb') %>
-        <a href="<%= (typeof auth !== 'undefined' && auth && auth.username) ? '/logout' : '/login' %>" class="neu-btn neu-btn--raised mobile-menu__cta">
-            <i class="<%= (typeof auth !== 'undefined' && auth && auth.username) ? 'fa-solid fa-user' : 'fa-solid fa-right-to-bracket' %>"></i>
-            <span><%= (typeof auth !== 'undefined' && auth && auth.username) ? auth.username : 'Login' %></span>
-        </a>
+        <%- include('partials/mobile/menu') %>
+        <% const __isAuthedMb = (typeof auth !== 'undefined' && auth && auth.username); %>
+
+        <% if (__isAuthedMb) { %>
+            <div class="mobile-auth" data-auth-menu="wrap">
+                <button type="button" class="neu-btn neu-btn--raised mobile-menu__cta mobile-auth__btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                    <span><%= (auth && auth.username && auth.username.length > 15) ? (auth.username.slice(0, 15) + '...') : (auth && auth.username ? auth.username : '') %></span>
+                    <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                </button>
+
+                <div class="mobile-auth__menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                    <%- include('partials/mobile/dropdown') %>
+                </div>
+            </div>
+        <% } else { %>
+            <a href="/login" class="neu-btn neu-btn--raised mobile-menu__cta">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+        <% } %>
     </div>
 
     <main class="login">
@@ -107,5 +141,6 @@
     <%- include('partials/footer') %>
 
     <script src="/javascript/addon/interface.js"></script>
+    <script src="/javascript/addon/dropdown.js"></script>
 </body>
 </html>

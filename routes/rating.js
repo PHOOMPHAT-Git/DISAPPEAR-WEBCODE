@@ -69,6 +69,43 @@ const getAvgRating10 = async () => {
     return Math.round(avg * 10) / 10;
 };
 
+const getRatingByQuery = async (q) => {
+    const raw = String(q || '').trim();
+    if (!raw) return { kind: 'empty' };
+
+    if (/^\d+$/.test(raw)) {
+        const n = Number(raw);
+        const ratingRaw = await Rating.findOne({
+            $or: [
+                { user_number: raw },
+                { user_number: n },
+                { roblox_user_id: raw },
+                { roblox_user_id: n }
+            ]
+        }).lean();
+
+        if (!ratingRaw) return { kind: 'not_found', query: raw };
+
+        const id = ratingRaw?.roblox_user_id ? String(ratingRaw.roblox_user_id) : '';
+        const name = id ? await robloxIdToUsername(id) : null;
+
+        return {
+            kind: 'ok',
+            query: raw,
+            info: id ? { id, name: name || (id ? `User ${id}` : 'Unknown') } : null,
+            ratingRaw
+        };
+    }
+
+    const info = await robloxUsernameToIdAndName(raw);
+    if (!info) return { kind: 'roblox_user_not_found', query: raw };
+
+    const ratingRaw = await Rating.findOne({ roblox_user_id: info.id }).lean();
+    if (!ratingRaw) return { kind: 'rating_not_found', query: info.name, info };
+
+    return { kind: 'ok', query: info.name, info, ratingRaw };
+};
+
 router.get('/latest', async (req, res, next) => {
     try {
         const ratingsRaw = await Rating.find().sort({ updated_at: -1, _id: -1 }).limit(9).lean();
@@ -83,16 +120,17 @@ router.get('/latest', async (req, res, next) => {
 
 router.get('/search', async (req, res, next) => {
     try {
-        const username = String(req.query.username || '').trim();
-        if (!username) return res.status(400).json({ error: 'username_required' });
+        const q = String(req.query.username || '').trim();
+        if (!q) return res.status(400).json({ error: 'username_required' });
 
-        const info = await robloxUsernameToIdAndName(username);
-        if (!info) return res.status(404).json({ error: 'roblox_user_not_found' });
+        const found = await getRatingByQuery(q);
 
-        const ratingRaw = await Rating.findOne({ roblox_user_id: info.id }).lean();
-        if (!ratingRaw) return res.status(404).json({ error: 'rating_not_found', roblox_user_id: info.id });
+        if (found.kind === 'empty') return res.status(400).json({ error: 'username_required' });
+        if (found.kind === 'roblox_user_not_found') return res.status(404).json({ error: 'roblox_user_not_found' });
+        if (found.kind === 'rating_not_found' || found.kind === 'not_found')
+            return res.status(404).json({ error: 'rating_not_found' });
 
-        const rating = await enrichRating(ratingRaw);
+        const rating = await enrichRating(found.ratingRaw);
         res.json({ rating });
     } catch (err) {
         next(err);
@@ -146,9 +184,9 @@ router.post('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        const username = String(req.query.username || '').trim();
+        const q = String(req.query.username || '').trim();
 
-        if (!username) {
+        if (!q) {
             return res.render('rating', {
                 queryUsername: '',
                 rating: null,
@@ -156,35 +194,46 @@ router.get('/', async (req, res, next) => {
             });
         }
 
-        const info = await robloxUsernameToIdAndName(username);
-        if (!info) {
+        const found = await getRatingByQuery(q);
+
+        if (found.kind === 'empty') {
             return res.render('rating', {
-                queryUsername: username,
+                queryUsername: '',
+                rating: null,
+                error: ''
+            });
+        }
+
+        if (found.kind === 'roblox_user_not_found') {
+            return res.render('rating', {
+                queryUsername: found.query,
                 rating: null,
                 error: 'roblox_user_not_found'
             });
         }
 
-        const ratingRaw = await Rating.findOne({ roblox_user_id: info.id }).lean();
-        if (!ratingRaw) {
+        if (found.kind === 'rating_not_found' || found.kind === 'not_found') {
             return res.render('rating', {
-                queryUsername: info.name,
+                queryUsername: found.query,
                 rating: null,
                 error: 'rating_not_found'
             });
         }
 
+        const info = found.info;
+        const ratingRaw = found.ratingRaw;
+
         const out = {
-            roblox_user_id: info.id,
-            roblox_username: info.name,
-            user_number: ratingRaw.user_number ? String(ratingRaw.user_number) : '',
-            rating: ratingRaw.rating,
-            message: ratingRaw.message || '',
-            updated_at: ratingRaw.updated_at
+            roblox_user_id: info?.id ? String(info.id) : (ratingRaw?.roblox_user_id ? String(ratingRaw.roblox_user_id) : ''),
+            roblox_username: info?.name ? String(info.name) : (ratingRaw?.roblox_user_id ? `User ${String(ratingRaw.roblox_user_id)}` : 'Unknown'),
+            user_number: ratingRaw?.user_number ? String(ratingRaw.user_number) : '',
+            rating: ratingRaw?.rating,
+            message: ratingRaw?.message || '',
+            updated_at: ratingRaw?.updated_at
         };
 
         res.render('rating', {
-            queryUsername: info.name,
+            queryUsername: found.query,
             rating: out,
             error: ''
         });

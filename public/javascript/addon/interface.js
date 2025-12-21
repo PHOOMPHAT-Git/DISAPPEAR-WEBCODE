@@ -8,6 +8,9 @@ let targetT = 0;
 let currentT = 0;
 let rafId = null;
 
+const getScrollT = () => clamp((window.scrollY || 0) / 140, 0, 1);
+const getMenuT = () => (mobileMenu.classList.contains('active') ? 1 : 0);
+
 const applyNavStyle = (t) => {
     const bgAlpha = 0.95 * t;
     const shadowAlpha = 0.35 * t;
@@ -34,20 +37,16 @@ const animateNav = () => {
     }
 };
 
-const setNavTargetFromScroll = () => {
-    const open = mobileMenu.classList.contains('active');
-    const y = open ? 999 : (window.scrollY || 0);
-    targetT = clamp(y / 140, 0, 1);
-
+const setNavTarget = () => {
+    targetT = Math.max(getScrollT(), getMenuT());
     if (!rafId) rafId = requestAnimationFrame(animateNav);
 };
 
 const setMobileMenuOpen = (open) => {
     hamburger.classList.toggle('active', open);
     mobileMenu.classList.toggle('active', open);
-    nav.classList.toggle('nav--menu-open', open);
     document.body.classList.toggle('no-scroll', open);
-    setNavTargetFromScroll();
+    setNavTarget();
 };
 
 hamburger.addEventListener('click', () => {
@@ -59,20 +58,7 @@ document.querySelectorAll('.mobile-menu__link').forEach(link => {
     link.addEventListener('click', () => setMobileMenuOpen(false));
 });
 
-window.addEventListener('scroll', setNavTargetFromScroll, { passive: true });
-window.addEventListener('resize', setNavTargetFromScroll);
+window.addEventListener('scroll', setNavTarget, { passive: true });
+window.addEventListener('resize', setNavTarget);
 
-setNavTargetFromScroll();
-
-const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-}, observerOptions);
-
-document.querySelectorAll('.neu-card, .section-header, .hero__content, .hero__visual').forEach(el => {
-    el.classList.add('fade-in');
-    observer.observe(el);
-});
+setNavTarget();

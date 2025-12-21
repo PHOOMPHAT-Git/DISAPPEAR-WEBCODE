@@ -3,20 +3,23 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "debug": "set DEBUG=disappear:* && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PHOOMPHAT-Git/DISAPPEAR-WEBCODE.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PHOOMPHAT-Git/DISAPPEAR-WEBCODE/issues"
+  },
+  "homepage": "https://github.com/PHOOMPHAT-Git/DISAPPEAR-WEBCODE#readme",
   "description": "",
   "dependencies": {
-    "http-errors": "^2.0.1",
-    "morgan": "^1.10.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "http-errors": "^2.0.1"
   }
 }

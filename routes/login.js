@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const https = require('https');
-const User = require('../models/user.js');
+const User = require('./models/user.js');
 
 const robloxUsernameToId = (username) => {
     const body = JSON.stringify({ usernames: [String(username)], excludeBannedUsers: false });
@@ -45,7 +45,6 @@ router.get('/', (req, res) => {
         showDiscord: false,
         discordUrl: res.locals?.config?.discord || '',
         robloxusername: '',
-        user_number: '',
         token: ''
     });
 });
@@ -53,10 +52,9 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res, next) => {
     try {
         const robloxusername = (req.body.robloxusername || '').trim();
-        const user_number = (req.body.user_number || '').trim();
         const token = (req.body.token || '').trim().toUpperCase();
 
-        if (!robloxusername || !user_number || !token) {
+        if (!robloxusername || !token) {
             res.clearCookie('rbx_username');
             res.clearCookie('rbx_userid');
             res.clearCookie('rbx_token');
@@ -66,7 +64,6 @@ router.post('/', async (req, res, next) => {
                 showDiscord: false,
                 discordUrl: res.locals?.config?.discord || '',
                 robloxusername,
-                user_number,
                 token
             });
         }
@@ -81,7 +78,6 @@ router.post('/', async (req, res, next) => {
                 showDiscord: false,
                 discordUrl: res.locals?.config?.discord || '',
                 robloxusername,
-                user_number,
                 token
             });
         }
@@ -98,12 +94,11 @@ router.post('/', async (req, res, next) => {
                 showDiscord: true,
                 discordUrl: res.locals?.config?.discord || '',
                 robloxusername,
-                user_number,
                 token
             });
         }
 
-        const found = await User.findOne({ roblox_user_id, user_number, token }).lean();
+        const found = await User.findOne({ roblox_user_id, token }).lean();
 
         if (found) {
             res.cookie('rbx_username', robloxusername, { httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 30 });
@@ -121,7 +116,6 @@ router.post('/', async (req, res, next) => {
             showDiscord: true,
             discordUrl: res.locals?.config?.discord || '',
             robloxusername,
-            user_number,
             token
         });
     } catch (err) {

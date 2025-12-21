@@ -60,7 +60,7 @@
                         <span>Login</span>
                     </div>
                     <h1 class="login__title">Member Verification</h1>
-                    <p class="login__subtitle">Enter your Roblox username, user number, and token.</p>
+                    <p class="login__subtitle">Enter your Roblox username and token.</p>
                 </div>
 
                 <% if (error) { %>
@@ -71,11 +71,6 @@
                     <div class="form-group">
                         <label class="form-label" for="robloxusername">Roblox Username</label>
                         <input class="form-input" id="robloxusername" name="robloxusername" type="text" autocomplete="username" value="<%= robloxusername || '' %>" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="user_number">User Number</label>
-                        <input class="form-input" id="user_number" name="user_number" type="text" autocomplete="one-time-code" value="<%= user_number || '' %>" required>
                     </div>
 
                     <div class="form-group">

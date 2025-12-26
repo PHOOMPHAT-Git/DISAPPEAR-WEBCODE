@@ -5,9 +5,6 @@ const UserSchema = new mongoose.Schema({
     discord_user_id: String,
     user_number: String,
     token: String,
-    ticket: Number,
-    warned: Number,
-    banned: Number,
     updated_at: { type: Date, default: Date.now }
 });
 

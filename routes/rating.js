@@ -182,64 +182,31 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-router.get('/', async (req, res, next) => {
+router.post('/delete', async (req, res, next) => {
     try {
-        const q = String(req.query.username || '').trim();
+        const roblox_user_id = req.cookies?.rbx_userid ? String(req.cookies.rbx_userid) : '';
+        const token = req.cookies?.rbx_token ? String(req.cookies.rbx_token) : '';
+        if (!roblox_user_id || !token) return res.status(401).json({ error: 'unauthorized' });
 
-        if (!q) {
-            return res.render('rating', {
-                queryUsername: '',
-                rating: null,
-                error: ''
-            });
-        }
+        const foundUser = await User.findOne({ roblox_user_id, token }).lean();
+        if (!foundUser) return res.status(403).json({ error: 'invalid_token' });
 
-        const found = await getRatingByQuery(q);
+        const deleted = await Rating.findOneAndDelete({ roblox_user_id }).lean();
+        if (!deleted) return res.status(404).json({ error: 'rating_not_found' });
 
-        if (found.kind === 'empty') {
-            return res.render('rating', {
-                queryUsername: '',
-                rating: null,
-                error: ''
-            });
-        }
+        const ratingsRaw = await Rating.find().sort({ updated_at: -1, _id: -1 }).limit(9).lean();
+        const ratings = await Promise.all(ratingsRaw.map(enrichRating));
+        const count = await Rating.countDocuments();
+        const avgRating10 = await getAvgRating10();
 
-        if (found.kind === 'roblox_user_not_found') {
-            return res.render('rating', {
-                queryUsername: found.query,
-                rating: null,
-                error: 'roblox_user_not_found'
-            });
-        }
-
-        if (found.kind === 'rating_not_found' || found.kind === 'not_found') {
-            return res.render('rating', {
-                queryUsername: found.query,
-                rating: null,
-                error: 'rating_not_found'
-            });
-        }
-
-        const info = found.info;
-        const ratingRaw = found.ratingRaw;
-
-        const out = {
-            roblox_user_id: info?.id ? String(info.id) : (ratingRaw?.roblox_user_id ? String(ratingRaw.roblox_user_id) : ''),
-            roblox_username: info?.name ? String(info.name) : (ratingRaw?.roblox_user_id ? `User ${String(ratingRaw.roblox_user_id)}` : 'Unknown'),
-            user_number: ratingRaw?.user_number ? String(ratingRaw.user_number) : '',
-            rating: ratingRaw?.rating,
-            message: ratingRaw?.message || '',
-            updated_at: ratingRaw?.updated_at
-        };
-
-        res.render('rating', {
-            queryUsername: found.query,
-            rating: out,
-            error: ''
-        });
+        res.json({ ok: true, deleted: true, ratings, count, avgRating10 });
     } catch (err) {
         next(err);
     }
+});
+
+router.get('/', (req, res) => {
+    return res.redirect('/');
 });
 
 module.exports = router;

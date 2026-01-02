@@ -20,6 +20,10 @@ if (uri) {
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var ratingRouter = require('./routes/rating');
+var updatesRouter = require('./routes/updates');
+var changelogRouter = require('./routes/changelog');
+var privacyPolicyRouter = require('./routes/privacy-policy');
+var termsOfServiceRouter = require('./routes/terms-of-service');
 
 var app = express();
 
@@ -65,6 +69,10 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/rating', ratingRouter);
+app.use('/updates', updatesRouter);
+app.use('/changelog', changelogRouter);
+app.use('/privacy-policy', privacyPolicyRouter);
+app.use('/terms-of-service', termsOfServiceRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="preload" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Disappear | ChangeLog</title>
+    <link rel="icon" type="image/png" href="/img/NEXORIA_GOLD_LOGO.png?v=2"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet/home.css">
+    <link rel="stylesheet" href="stylesheet/addon/scrollbar.css">
+    <link rel="stylesheet" href="stylesheet/addon/dropdown.css">
+    <script src="/javascript/addon/loader.js"></script>
+    <script src="/javascript/addon/changepage.js"></script>
+    <script src="/javascript/addon/security.js"></script>
+    <style id="preload-cover-style">
+        html.preload::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background:#303030;
+            z-index:999998;
+            opacity:1;
+            pointer-events:none;
+        }
+    </style>
+
+    <style>
+        .page-hero{
+            padding: 140px 24px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .page-hero__container{
+            max-width: var(--container-max);
+            margin: 0 auto;
+        }
+
+        .changelog{
+            padding: 40px 24px 100px;
+        }
+
+        .changelog__container{
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .changelog__list{
+            display: grid;
+            gap: 18px;
+            margin-top: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 560px));
+            justify-content: center;
+        }
+
+        .changelog__list > *{
+            width: 100%;
+        }
+
+        .changelog__card{
+            padding: 22px;
+        }
+
+        .changelog__top{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .changelog__left{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .changelog__sections{
+            display: grid;
+            gap: 14px;
+        }
+
+        .changelog__section-title{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .changelog__items{
+            display: grid;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .changelog__items li{
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .changelog__items i{
+            margin-top: 3px;
+            color: var(--gold-primary);
+        }
+
+        .changelog__label{
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(255, 204, 0, 0.08);
+            border: 1px solid rgba(255, 204, 0, 0.18);
+            color: var(--gold-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__logo">
+                <span class="nav__logo-text">DISAPPEAR</span>
+            </div>
+
+            <%- include('partials/pc/menu') %>
+
+            <% const __isAuthed = (typeof auth !== 'undefined' && auth && auth.username); %>
+            <% if (__isAuthed) { %>
+                <div class="nav__auth" data-auth-menu="wrap">
+                    <button type="button" class="nav__cta neu-btn neu-btn--raised nav__auth-btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                        <span><%= (auth.username.length > 10) ? (auth.username.slice(0, 10) + '...') : auth.username %></span>
+                        <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                    </button>
+
+                    <div class="nav__auth-menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                        <%- include('partials/pc/dropdown') %>
+                    </div>
+                </div>
+            <% } else { %>
+                <a href="/login" class="nav__cta neu-btn neu-btn--raised">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </a>
+            <% } %>
+
+            <button class="nav__hamburger" id="hamburger">
+                <i class="fas fa-bars hamburger-open"></i>
+                <i class="fas fa-xmark hamburger-close"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <%- include('partials/mobile/menu') %>
+
+        <% const __isAuthedMb = (typeof auth !== 'undefined' && auth && auth.username); %>
+        <% if (__isAuthedMb) { %>
+            <div class="mobile-auth" data-auth-menu="wrap">
+                <button type="button" class="neu-btn neu-btn--raised mobile-menu__cta mobile-auth__btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                    <span><%= (auth.username.length > 15) ? (auth.username.slice(0, 15) + '...') : auth.username %></span>
+                    <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                </button>
+
+                <div class="mobile-auth__menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                    <%- include('partials/mobile/dropdown') %>
+                </div>
+            </div>
+        <% } else { %>
+            <a href="/login" class="neu-btn neu-btn--raised mobile-menu__cta">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+        <% } %>
+    </div>
+
+    <header class="page-hero">
+        <div class="page-hero__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>ChangeLog</span>
+                </div>
+                <h1 class="section-title">ChangeLog</h1>
+                <p class="section-subtitle">Version history & changes</p>
+            </div>
+
+            <a href="/" class="neu-btn neu-btn--raised" style="margin-top: 14px;">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="changelog">
+        <div class="changelog__container">
+            <% const list = (typeof changelog !== 'undefined' && Array.isArray(changelog)) ? changelog : []; %>
+
+            <% if (list.length) { %>
+                <div class="changelog__list">
+                    <% list.forEach((v) => { %>
+                        <article class="neu-card neu-card--raised changelog__card">
+                            <div class="changelog__top">
+                                <div class="changelog__left">
+                                    <span class="neu-badge">
+                                        <i class="fa-solid fa-code-branch"></i>
+                                        <span class="changelog__version"><%= v.version || '' %></span>
+                                    </span>
+                                </div>
+
+                                <div class="changelog__date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span><%= v.date || '' %></span>
+                                </div>
+                            </div>
+
+                            <div class="changelog__sections">
+                                <% (Array.isArray(v.sections) ? v.sections : []).forEach((s) => { %>
+                                    <div>
+                                        <div class="changelog__section-title">
+                                            <span class="changelog__label"><%= s.label || '' %></span>
+                                        </div>
+
+                                        <ul class="changelog__items">
+                                            <% (Array.isArray(s.items) ? s.items : []).forEach((it) => { %>
+                                                <li><i class="fa-solid fa-check"></i><span><%= it %></span></li>
+                                            <% }) %>
+                                        </ul>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </article>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="neu-card neu-card--inset" style="padding: 22px; text-align:center; color: var(--text-secondary);">
+                    No changelog yet
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/addon/interface.js"></script>
+    <script src="/javascript/addon/dropdown.js"></script>
+</body>
+</html>

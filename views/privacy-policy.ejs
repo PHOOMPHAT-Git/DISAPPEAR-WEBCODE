@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="preload" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title><%= title || 'Disappear | Privacy Policy' %></title>
+
+    <link rel="icon" type="image/png" href="/img/NEXORIA_GOLD_LOGO.png?v=2"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="/stylesheet/home.css">
+    <link rel="stylesheet" href="/stylesheet/addon/scrollbar.css">
+    <link rel="stylesheet" href="/stylesheet/addon/dropdown.css">
+
+    <script src="/javascript/addon/loader.js"></script>
+    <script src="/javascript/addon/changepage.js"></script>
+    <script src="/javascript/addon/security.js"></script>
+
+    <style id="preload-cover-style">
+        html.preload::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background:#303030;
+            z-index:999998;
+            opacity:1;
+            pointer-events:none;
+        }
+    </style>
+
+    <style>
+        .page-hero{
+            padding: 140px 24px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .page-hero__container{
+            max-width: var(--container-max);
+            margin: 0 auto;
+        }
+
+        .policy{
+            padding: 40px 24px 100px;
+        }
+
+        .policy__container{
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .policy__card{
+            padding: 26px;
+        }
+
+        .policy__meta{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .policy__content{
+            margin-top: 18px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .policy__content h2{
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .policy__content p{
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .policy__list{
+            display: grid;
+            gap: 10px;
+            color: var(--text-secondary);
+            margin: 0;
+            padding: 0;
+        }
+
+        .policy__list li{
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .policy__list i{
+            margin-top: 3px;
+            color: var(--gold-primary);
+        }
+
+        .policy__hr{
+            height: 1px;
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__logo">
+                <span class="nav__logo-text">DISAPPEAR</span>
+            </div>
+
+            <%- include('partials/pc/menu') %>
+
+            <% const __isAuthed = (typeof auth !== 'undefined' && auth && auth.username); %>
+            <% if (__isAuthed) { %>
+                <div class="nav__auth" data-auth-menu="wrap">
+                    <button type="button" class="nav__cta neu-btn neu-btn--raised nav__auth-btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                        <span><%= (auth.username.length > 10) ? (auth.username.slice(0, 10) + '...') : auth.username %></span>
+                        <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                    </button>
+
+                    <div class="nav__auth-menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                        <%- include('partials/pc/dropdown') %>
+                    </div>
+                </div>
+            <% } else { %>
+                <a href="/login" class="nav__cta neu-btn neu-btn--raised">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </a>
+            <% } %>
+
+            <button class="nav__hamburger" id="hamburger">
+                <i class="fas fa-bars hamburger-open"></i>
+                <i class="fas fa-xmark hamburger-close"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <%- include('partials/mobile/menu') %>
+
+        <% const __isAuthedMb = (typeof auth !== 'undefined' && auth && auth.username); %>
+        <% if (__isAuthedMb) { %>
+            <div class="mobile-auth" data-auth-menu="wrap">
+                <button type="button" class="neu-btn neu-btn--raised mobile-menu__cta mobile-auth__btn" data-auth-menu="btn" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                    <span><%= (auth.username.length > 15) ? (auth.username.slice(0, 15) + '...') : auth.username %></span>
+                    <i class="fa-solid fa-chevron-down nav__auth-caret"></i>
+                </button>
+
+                <div class="mobile-auth__menu" data-auth-menu="menu" role="menu" aria-hidden="true">
+                    <%- include('partials/mobile/dropdown') %>
+                </div>
+            </div>
+        <% } else { %>
+            <a href="/login" class="neu-btn neu-btn--raised mobile-menu__cta">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+        <% } %>
+    </div>
+
+    <header class="page-hero">
+        <div class="page-hero__container">
+            <div class="section-header">
+                <div class="section-badge neu-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Privacy</span>
+                </div>
+                <h1 class="section-title">Privacy Policy</h1>
+                <p class="section-subtitle">How we collect, use, and protect your information</p>
+
+                <div class="policy__meta">
+                    <span class="neu-badge"><i class="fa-regular fa-clock"></i> Last updated : 2026-01-01</span>
+                </div>
+            </div>
+
+            <a href="/" class="neu-btn neu-btn--raised" style="margin-top: 14px;">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="policy">
+        <div class="policy__container">
+            <article class="neu-card neu-card--raised policy__card">
+                <div class="policy__content">
+                    <p>
+                        This Privacy Policy explains how Disappear collects, uses, and protects your information.
+                        By using this website, you agree to this policy.
+                    </p>
+
+                    <div class="policy__hr"></div>
+
+                    <div>
+                        <h2>Information We Collect</h2>
+                        <ul class="policy__list">
+                            <li><i class="fa-solid fa-check"></i><span>Account information you provide (such as a username) to enable login and basic features.</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Basic usage and security data needed to operate and protect the service (such as access logs).</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Ratings or feedback you submit through the website (if available).</span></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h2>How We Use Your Information</h2>
+                        <ul class="policy__list">
+                            <li><i class="fa-solid fa-check"></i><span>To authenticate users and provide website features.</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>To improve performance, fix bugs, and enhance user experience.</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>To prevent fraud/abuse and maintain the security of our systems.</span></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h2>Cookies and Similar Technologies</h2>
+                        <p>
+                            We may use cookies for essential functionality, such as keeping you signed in.
+                            You can disable cookies in your browser settings, but some features may not work properly.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h2>Sharing of Information</h2>
+                        <p>
+                            We do not sell your personal data. We only share information when necessary, such as to comply with legal obligations
+                            or to protect the safety and integrity of the service.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h2>Data Retention and Security</h2>
+                        <p>
+                            We use reasonable safeguards to protect your information from unauthorized access.
+                            However, no system is 100% secure. If you believe there is a security issue, please contact us.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h2>Your Rights</h2>
+                        <ul class="policy__list">
+                            <li><i class="fa-solid fa-check"></i><span>Request to update or correct your account information.</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Request deletion of your account and related data (subject to applicable requirements and limitations).</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Ask questions about how your information is used.</span></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h2>Changes to This Policy</h2>
+                        <p>
+                            We may update this policy from time to time. The “Last updated” date above will reflect the most recent revision.
+                            We recommend reviewing this page periodically.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/addon/interface.js"></script>
+    <script src="/javascript/addon/dropdown.js"></script>
+</body>
+</html>
